@@ -49,9 +49,17 @@ class mywindow(QMainWindow):
 
     # <<<<<<<<<<创建GUI方法
     def addui(self):
+        mylayout=QVBoxLayout()
         button1=QPushButton('绘图')
         button1.clicked.connect(self.drawlineanimation)
-        self.setCentralWidget(button1)
+        button2=QPushButton('立方体')
+        button2.clicked.connect(self.cube)
+        mylayout.addWidget(button1)
+        mylayout.addWidget(button2)
+        mywidget=QWidget()
+        mywidget.setLayout(mylayout)
+        self.setCentralWidget(mywidget)
+
     def drawlineanimation(self):
         fig=plt.figure()
         ax=plt.axes()
@@ -68,6 +76,36 @@ class mywindow(QMainWindow):
             line.set_data(x,y)
             return line,
         ani=animation.FuncAnimation(fig,updateline,frames=np.linspace(0, 50, 128),init_func=initline,interval=50,blit=True)
+        plt.show()
+    #绘制立方体
+    def cube(self):
+        fig=plt.figure()
+        ax=plt.axes(projection='3d')
+        xd=range(30)
+        yd=range(30)
+        zd=range(30)
+        ax.scatter3D(xd,yd,zd, cmap='Blues')  #绘制散点图    没有这个散点图坐标轴会缩放到一个尺寸
+        a=5
+        b=6
+        c=30
+        #画xy面
+        x,y=np.mgrid[0:a:5j,0:b:5j]
+        z=np.zeros((5,5),)
+        ax.plot_surface(x,y,z,color='r',rstride=1,cstride=1)
+        z=z+c
+        ax.plot_surface(x,y,z,color='r',rstride=1,cstride=1)
+        #画xz面
+        x,z=np.mgrid[0:a:5j,0:c:5j]
+        y=np.zeros((5,5),)
+        ax.plot_surface(x,y,z,color='r',rstride=1,cstride=1)
+        y=y+b
+        ax.plot_surface(x,y,z,color='r',rstride=1,cstride=1)
+        #画yz面
+        y,z=np.mgrid[0:b:5j,0:c:5j]
+        x=np.zeros((5,5),)
+        ax.plot_surface(x,y,z,color='r',rstride=1,cstride=1)
+        x=x+a
+        ax.plot_surface(x,y,z,color='r',rstride=1,cstride=1)
         plt.show()
 
 
